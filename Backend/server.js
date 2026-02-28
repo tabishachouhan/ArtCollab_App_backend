@@ -13,9 +13,20 @@ import { errorHandler } from "./middleware/errorMiddleware.js";
 const app = express();
 const PORT = process.env.PORT || 5678;
 
+const allowedOrigins = [
+  "https://art-collab-app-95jq.vercel.app",
+  "https://art-collab-app-rv3h-gmgs5u3ah-tabishachouhan001-1903s-projects.vercel.app",
+  "https://your-next-frontend-url.vercel.app" // add more as needed
+];
+
 app.use(cors({
-  origin: "https://art-collab-app-rv3h-gmgs5u3ah-tabishachouhan001-1903s-projects.vercel.app/", // deployed frontend
-  credentials: true
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
 }));
 app.use(express.json());
 
