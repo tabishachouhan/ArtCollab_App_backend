@@ -13,7 +13,10 @@ import { errorHandler } from "./middleware/errorMiddleware.js";
 const app = express();
 const PORT = process.env.PORT || 5678;
 
-app.use(cors({ origin: "*" }));
+app.use(cors({
+  origin: "https://art-collab-app-q7va.vercel.app", // deployed frontend
+  credentials: true
+}));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
