@@ -13,7 +13,9 @@ import { errorHandler } from "./middleware/errorMiddleware.js";
 const app = express();
 const PORT = process.env.PORT || 5678;
 
-app.use(cors());
+app.use(cors({
+  origin: "https://tabishaarttt.netlify.app"
+}));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
