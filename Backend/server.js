@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 5678;
 
 app.use(cors({
-  origin: "https://art-collab-app-q7va.vercel.app", // deployed frontend
+  origin: "https://art-collab-app-95jq.vercel.app", // deployed frontend
   credentials: true
 }));
 app.use(express.json());
