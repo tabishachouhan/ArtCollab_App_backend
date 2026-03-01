@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
 import fetch from "node-fetch";
-
 import dotenv from "dotenv";
+
 dotenv.config();
 
 import { supabase } from "./config/supabaseClient.js";
@@ -13,24 +13,32 @@ import { errorHandler } from "./middleware/errorMiddleware.js";
 const app = express();
 const PORT = process.env.PORT || 5678;
 
-const allowedOrigins = [
-  "https://art-collab-app-95jq.vercel.app",
-  "https://art-collab-app-rv3h-gmgs5u3ah-tabishachouhan001-1903s-projects.vercel.app",
-  "https://your-next-frontend-url.vercel.app" ,
-  "https://art-collab-app-rv3h.vercel.app"
-];
-
+/* ===========================
+   ✅ SMART CORS CONFIG
+   Allows all Vercel deployments
+   =========================== */
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (
+      origin.includes("vercel.app") ||
+      origin.includes("localhost")
+    ) {
+      return callback(null, true);
     }
-  }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 }));
+
 app.use(express.json());
 
+/* ===========================
+   ROUTES
+   =========================== */
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 
@@ -38,6 +46,9 @@ app.get("/", (req, res) => {
   res.json({ message: "ArtCollab Backend Running 🚀" });
 });
 
+/* ===========================
+   SUPABASE TEST
+   =========================== */
 app.get("/supabase-test", async (req, res) => {
   try {
     const { data, error } = await supabase.auth.admin.listUsers();
@@ -47,7 +58,9 @@ app.get("/supabase-test", async (req, res) => {
   }
 });
 
-
+/* ===========================
+   GEMINI - LIST MODELS
+   =========================== */
 app.get("/api/list-models", async (req, res) => {
   try {
     const response = await fetch(
@@ -56,13 +69,15 @@ app.get("/api/list-models", async (req, res) => {
 
     const data = await response.json();
     res.json(data);
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to list models" });
   }
 });
 
+/* ===========================
+   GEMINI - AI CHAT
+   =========================== */
 app.post("/api/ai-chat", async (req, res) => {
   const { prompt } = req.body;
 
@@ -75,14 +90,10 @@ app.post("/api/ai-chat", async (req, res) => {
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [
-            {
-              parts: [{ text: prompt }],
-            },
+            { parts: [{ text: prompt }] }
           ],
         }),
       }
@@ -92,7 +103,10 @@ app.post("/api/ai-chat", async (req, res) => {
 
     if (!response.ok) {
       console.log("Gemini API Error:", data);
-      return res.status(500).json({ answer: "Gemini API Error", error: data });
+      return res.status(500).json({
+        answer: "Gemini API Error",
+        error: data,
+      });
     }
 
     const text =
@@ -106,6 +120,12 @@ app.post("/api/ai-chat", async (req, res) => {
     res.status(500).json({ answer: "AI failed to respond." });
   }
 });
+
+/* ===========================
+   ERROR HANDLER
+   =========================== */
+app.use(errorHandler);
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
