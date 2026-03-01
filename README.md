@@ -138,8 +138,6 @@ Create a .env file in root and add:
 PORT=5678
 SUPABASE_URL=https://xrofniogjzzexlpwdoxu.supabase.co
 SUPABASE_SECRET_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhyb2ZuaW9nanp6ZXhscHdkb3h1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjAxNTA3NSwiZXhwIjoyMDg3NTkxMDc1fQ.elQUCw8ZW79L7XioLd3n3MCXvuEqT7t0201WUDTjB2w
-GEMINI_API_KEY=AIzaSyCOIqq7IfsO1d3fF9Xwf03rr740hP5jbu4
-JWT_SECRET=your_jwt_secret
 4️⃣ Run Server
 
 For development:
