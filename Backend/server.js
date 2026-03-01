@@ -16,7 +16,8 @@ const PORT = process.env.PORT || 5678;
 const allowedOrigins = [
   "https://art-collab-app-95jq.vercel.app",
   "https://art-collab-app-rv3h-gmgs5u3ah-tabishachouhan001-1903s-projects.vercel.app",
-  "https://your-next-frontend-url.vercel.app" // add more as needed
+  "https://your-next-frontend-url.vercel.app" ,
+  "https://art-collab-app-rv3h.vercel.app"
 ];
 
 app.use(cors({
